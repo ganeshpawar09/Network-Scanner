@@ -77,8 +77,8 @@ def get_memory_usage(host, community='public'):
     return None
 
 if __name__ == "__main__":
-    host = '192.168.237.68'  # Replace with your device IP
-    community = 'public'
+    host = '192.168.237.190' 
+    community = 'ganeshpawar09'
 
     cpu = get_cpu_load(host, community)
     if cpu is not None:

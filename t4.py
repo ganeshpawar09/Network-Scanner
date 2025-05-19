@@ -28,19 +28,18 @@ def check_firmware_version(host, community='public', approved_versions=None):
         if approved_versions:
             for version in approved_versions:
                 if version in sys_descr:
-                    print("Firmware Compliance: ✅ Compliant")
+                    print("Firmware Compliance: Compliant")
                     return
-            print("Firmware Compliance: ❌ Non-compliant")
+            print("Firmware Compliance: Non-compliant")
         else:
             print("Approved version list not provided")
     else:
         print("Could not retrieve system description")
 
 if __name__ == "__main__":
-    device_ip = "192.168.237.68"  # Your device IP
-    community_string = "public"
+    device_ip = "192.168.237.190"  
+    community_string = "ganeshpawar09"
     
-    # Add approved versions (substring match)
     approved_firmware_versions = [
         "Windows Version 6.3",
         "IOS-XE 17.9",

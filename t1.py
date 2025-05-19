@@ -4,6 +4,7 @@ from icmplib import ping
 from scapy.all import ARP, Ether, srp
 from concurrent.futures import ThreadPoolExecutor
 from mac_vendor_lookup import MacLookup
+import pandas as pd
 import os
 
 os.environ["PATH"] += os.pathsep + r"C:\Program Files (x86)\Nmap"
@@ -99,6 +100,10 @@ def check_reachability(ip):
             'avg_rtt_ms': None,
             'packet_loss_percent': 100
         }
+def export_to_excel(devices, filename='network_inventory.xlsx'):
+    df = pd.DataFrame(devices)
+    df.to_excel(filename, index=False)
+    print(f"Device data exported to {filename}")
 
 def main():
     network = "192.168.237.0/24"
@@ -120,16 +125,19 @@ def main():
         device.update(reachability[i])
 
     print("\n--- Network Device Inventory ---")
-    for device in devices:
-        print(f"IP: {device['ip']}")
-        print(f"MAC: {device['mac']}")
-        print(f"Vendor: {device['vendor']}")
-        print(f"Hostname: {device['hostname']}")
-        print(f"OS: {device['os']}")
-        print(f"Device Type: {device['device_type']}")
-        print(f"Status: {'Online' if device['is_alive'] else 'Offline'}")
-        print(f"Avg RTT: {device['avg_rtt_ms']} ms")
-        print(f"Packet Loss: {device['packet_loss_percent']}%\n")
+
+    export_to_excel(devices)
+
+    # for device in devices:
+    #     print(f"IP: {device['ip']}")
+    #     print(f"MAC: {device['mac']}")
+    #     print(f"Vendor: {device['vendor']}")
+    #     print(f"Hostname: {device['hostname']}")
+    #     print(f"OS: {device['os']}")
+    #     print(f"Device Type: {device['device_type']}")
+    #     print(f"Status: {'Online' if device['is_alive'] else 'Offline'}")
+    #     print(f"Avg RTT: {device['avg_rtt_ms']} ms")
+    #     print(f"Packet Loss: {device['packet_loss_percent']}%\n")
 
 if __name__ == "__main__":
     main()

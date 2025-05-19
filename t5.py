@@ -49,8 +49,4 @@ def get_device_inventory(host, community='public'):
     return inventory
 
 if __name__ == "__main__":
-    devices = [
-        {'host': '192.168.237.68', 'community': 'public'},
-    ]
-    for device in devices:
-        get_device_inventory(device['host'], device['community'])
+    get_device_inventory('192.168.237.190', 'ganeshpawar09')

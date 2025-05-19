@@ -1,4 +1,7 @@
 from pysnmp.hlapi import *
+import pandas as pd
+import re
+
 
 def snmp_walk(ip, community, oid):
     # Generator to perform SNMP walk on given OID
@@ -71,6 +74,33 @@ def get_interface_stats(ip, community):
 
     return interfaces
 
+
+def clean_string(s):
+    if isinstance(s, str):
+        # Remove illegal characters not allowed in Excel
+        return re.sub(r'[\x00-\x1F\x7F-\x9F]', '', s)
+    return s
+
+def export_to_excel(interfaces, filename='interface_stats.xlsx'):
+    rows = []
+    for ifIndex, stats in interfaces.items():
+        row = {
+            'Interface Index': clean_string(ifIndex),
+            'Description': clean_string(stats.get('description', '')),
+            'Operational Status': 'Up' if stats.get('oper_status') == 1 else 'Down',
+            'In Octets': stats.get('in_octets', 0),
+            'Out Octets': stats.get('out_octets', 0),
+            'In Errors': stats.get('in_errors', 0),
+            'Out Errors': stats.get('out_errors', 0),
+            'In Discards': stats.get('in_discards', 0),
+            'Out Discards': stats.get('out_discards', 0)
+        }
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+    df.to_excel(filename, index=False)
+    print(f"Interface data exported to {filename}")
+
 def print_interface_stats(interfaces):
     print("\n--- Interface Stats ---")
     for ifIndex, stats in interfaces.items():
@@ -85,8 +115,9 @@ def print_interface_stats(interfaces):
         print()
 
 if __name__ == "__main__":
-    device_ip = "192.168.237.68"
-    community = "public"
+    device_ip = "192.168.237.190"
+    community = "ganeshpawar09"
 
     interfaces = get_interface_stats(device_ip, community)
-    print_interface_stats(interfaces)
+    # print_interface_stats(interfaces)
+    export_to_excel(interfaces)
